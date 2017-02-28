@@ -35,7 +35,30 @@ class Case {
   }
 
   matches(value){
-    return eval(this.getPattern()) == value;
+    return this.getType().matches(value, this.getPattern())
+  }
+
+  getType(){
+    if(Value.applysFor(this.getPattern())){
+      return Value;
+    }
+  }
+
+}
+
+class Value {
+
+  static matches(value, pattern){
+    return eval(pattern) === value;
+  }
+
+  static applysFor(pattern){
+    let value = eval(pattern);
+    return(
+      typeof value == "number" || typeof value == "string" || typeof value == "symbol" ||
+      typeof value == "boolean" || typeof value == "null" || typeof value == "undefined" ||
+      typeof value == "object"
+    );
   }
 
 }
