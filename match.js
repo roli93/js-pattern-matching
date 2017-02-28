@@ -90,8 +90,6 @@ const match = (value) => (...functionCases) => {
   if(!matchingCase)
     throw new MatchError()
 
-    console.log(matchingCase.toString());
-
   return matchingCase.getResultFunction()()
 }
 
