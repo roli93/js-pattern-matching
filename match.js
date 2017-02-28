@@ -15,11 +15,11 @@ const withoutWhitespaces = (string) => string.replace(/\s/g, '');
 class Case {
 
   constructor(functionCase){
-    this.resultFunction = functionCase
+    this.stringCase = withoutWhitespaces(functionCase.toString())
   }
 
   toString(){
-    return withoutWhitespaces(this.resultFunction.toString())
+    return this.stringCase;
   }
 
   isSintacticallyValid(){
@@ -31,7 +31,7 @@ class Case {
   }
 
   getResultFunction(){
-    return this.resultFunction
+    return eval(this.toString().replace("=" + this.getPattern(), ""))
   }
 
   matches(value){
@@ -41,6 +41,8 @@ class Case {
   getType(){
     if(Value.applysFor(this.getPattern())){
       return Value;
+    } else if(Annonymous.applysFor(this.getPattern())){
+      return Annonymous;
     }
   }
 
@@ -53,11 +55,11 @@ class Value {
   }
 
   static applysFor(pattern){
+    if(isUndeclared(pattern)) return false;
     let value = eval(pattern);
     return(
-      !isUndeclared(pattern) &&
-      (typeof value == "number" || typeof value == "string" || typeof value == "symbol" ||
-      typeof value == "boolean" || typeof value == "null" || typeof value == "undefined" || typeof value == "object")
+      typeof value == "number" || typeof value == "string" || typeof value == "symbol" ||
+      typeof value == "boolean" || typeof value == "null" || typeof value == "undefined" || typeof value == "object"
     );
   }
 
@@ -66,16 +68,11 @@ class Value {
 class Annonymous {
 
   static matches(value, pattern){
-    return eval(pattern) === value;
+    return true;
   }
 
   static applysFor(pattern){
-    let value = eval(pattern);
-    return(
-      !isUndeclared(pattern) typeof value == "number" || typeof value == "string" || typeof value == "symbol" ||
-      typeof value == "boolean" || typeof value == "null" || typeof value == "undefined" ||
-      typeof value == "object"
-    );
+    return pattern === "_"
   }
 
 }
@@ -92,6 +89,8 @@ const match = (value) => (...functionCases) => {
   let matchingCase = cases.find( aCase => aCase.matches(value) )
   if(!matchingCase)
     throw new MatchError()
+
+    console.log(matchingCase.toString());
 
   return matchingCase.getResultFunction()()
 }

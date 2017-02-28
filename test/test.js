@@ -30,12 +30,19 @@ describe('Match', function() {
     const getNumberName = (number) =>  match (number) (
       (when= 1) => "one",
       (when= 2) => "two",
-      (when= _) => "other"
+      (when= _) => "other",
+      (when= 100) => "a hundred"
     )
 
     it('should always match an annonymous variable if no previous value matches', () => {
       expect(getNumberName(5)).to.equal("other");
     });
+
+    it('should absorb further cases with an annonymous variable', () => {
+      expect(getNumberName(100)).to.equal("other");
+    });
+
+
   });
 
 });
