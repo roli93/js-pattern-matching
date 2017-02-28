@@ -1,11 +1,11 @@
 let { MatchError, ParseError } = require('./errors.js');
 
-const isType = (value) => {
-  let result;
+const isUndeclared = (pattern) => {
+  let result = false;
   try {
-    result = typeof eval(value) === "function"
+    eval(pattern);
   } catch(e) {
-    if(e instanceof ReferenceError) result = false
+    if(e instanceof ReferenceError) result = true;
   }
   return result
 }
@@ -55,7 +55,24 @@ class Value {
   static applysFor(pattern){
     let value = eval(pattern);
     return(
-      typeof value == "number" || typeof value == "string" || typeof value == "symbol" ||
+      !isUndeclared(pattern) &&
+      (typeof value == "number" || typeof value == "string" || typeof value == "symbol" ||
+      typeof value == "boolean" || typeof value == "null" || typeof value == "undefined" || typeof value == "object")
+    );
+  }
+
+}
+
+class Annonymous {
+
+  static matches(value, pattern){
+    return eval(pattern) === value;
+  }
+
+  static applysFor(pattern){
+    let value = eval(pattern);
+    return(
+      !isUndeclared(pattern) typeof value == "number" || typeof value == "string" || typeof value == "symbol" ||
       typeof value == "boolean" || typeof value == "null" || typeof value == "undefined" ||
       typeof value == "object"
     );
