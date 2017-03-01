@@ -1,6 +1,5 @@
 import caseTypes from './case-types.js';
-
-const withoutWhitespaces = (string) => string.replace(/\s/g, '');
+import { withoutWhitespaces, substringFrom } from '../util/string-util.js';
 
 class Case {
 
@@ -24,11 +23,15 @@ class Case {
   }
 
   getResultFunction(){
-    return eval(`()=>${this.toString().substring(this.toString().indexOf("=>")+2)}`)
+    return eval(`(${this.getMatchingValue()?this.getMatchingValue():''})=>${substringFrom(this.toString(),"=>")}`);
   }
 
   matches(value){
-    return this.getType().matches(value, this.getPattern())
+    return this.getType().matches(value, this.getPattern());
+  }
+
+  getMatchingValue(){
+    return this.getType().extractedValue(this.getPattern());
   }
 
   getType(){

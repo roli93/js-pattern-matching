@@ -1,3 +1,5 @@
+import { substringFrom, substringTo } from '../util/string-util.js';
+
 const isUndeclared = (pattern) => {
   let result = false;
   try {
@@ -24,6 +26,10 @@ class PrimitiveValue {
     );
   }
 
+  static extractedValue(){
+    return null;
+  }
+
 }
 
 class Annonymous {
@@ -36,9 +42,52 @@ class Annonymous {
     return pattern === "_"
   }
 
+  static extractedValue(){
+    return null;
+  }
+
+
+}
+
+class Class {
+
+  static matches(value, pattern){
+    return value instanceof eval(pattern)
+  }
+
+  static applysFor(pattern){
+    if(isUndeclared(pattern)) return false;
+    return typeof eval(pattern) === 'function'
+  }
+
+  static extractedValue(){
+    return null;
+  }
+
+}
+
+class BindingClass {
+
+  static matches(value, pattern){
+    let className = substringFrom(pattern, "<")
+    return value instanceof eval(className)
+  }
+
+  static applysFor(pattern){
+    let className = substringFrom(pattern, "<")
+    if(isUndeclared(className)) return false;
+    return typeof eval(className) === 'function'
+  }
+
+  static extractedValue(pattern){
+    return substringTo(pattern,"<");
+  }
+
 }
 
 export default [
   PrimitiveValue,
-  Annonymous
+  Annonymous,
+  Class,
+  BindingClass
 ];

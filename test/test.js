@@ -72,4 +72,28 @@ describe('Match', function() {
 
   });
 
+  context('Class matching', () => {
+
+    const getValueName = (value) =>  match (value) (
+      (when= 1) => "one",
+      (when= EvalError) => "EvalError",
+      (when= e < ReferenceError) => e.message,
+      (when= Error) => "Other Error"
+    )
+
+    it('should match a value belonging to a class', () => {
+      expect(getValueName(new EvalError())).to.equal("EvalError");
+    });
+
+    it('should match a value belonging to a subclass', () => {
+      expect(getValueName(new RangeError() )).to.equal("Other Error");
+    });
+
+    it('should allow for the matching value to be used in the closure', () => {
+      expect(getValueName(new ReferenceError("Undeclared varable") )).to.equal("Undeclared varable");
+    });
+
+
+  });
+
 });
