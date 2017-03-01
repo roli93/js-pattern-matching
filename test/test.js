@@ -5,7 +5,9 @@ var { MatchError } = require('../errors.js');
 describe('Match', function() {
   context('Value matching', () => {
 
-    const getValueName = (number) =>  match (number) (
+    let obj = {key:"value"};
+
+    const getValueName = (value) =>  match (value) (
       (when= 1) => "one",
       (when= 2) => "two",
       (when= 2) => "another two",
@@ -13,11 +15,31 @@ describe('Match', function() {
       (when= undefined) => "undefined",
       (when= null) => "null",
       (when= true) => "true",
-
+      (when= NaN) => "Not a number"
     )
 
-    it('should match a literal value', () => {
+    it('should match a literal number value', () => {
       expect(getValueName(1)).to.equal("one");
+    });
+
+    it('should match a literal boolean value', () => {
+      expect(getValueName(true)).to.equal("true");
+    });
+
+    it('should match a literal string value', () => {
+      expect(getValueName("three")).to.equal("3");
+    });
+
+    it('should match a literal null value', () => {
+      expect(getValueName(null)).to.equal("null");
+    });
+
+    it('should match a literal undefined value', () => {
+      expect(getValueName(undefined)).to.equal("undefined");
+    });
+
+    it('should match a literal NaN value', () => {
+      expect(getValueName(NaN)).to.equal("Not a number");
     });
 
     it('should throw a MatchError when no literal value matches', () => {

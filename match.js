@@ -15,23 +15,20 @@ const withoutWhitespaces = (string) => string.replace(/\s/g, '');
 class Case {
 
   constructor(functionCase){
-    this.stringCase = withoutWhitespaces(functionCase.toString())
-  }
-
-  toString(){
-    return this.stringCase;
+    this.toString = () => functionCase.toString();
   }
 
   isSintacticallyValid(){
-    return /\(when=.*\)=>.*/.test(this.toString())
+    return /\(when=.*\)\s*=>.*/.test(this.toString())
   }
 
   getPattern(){
-    return this.toString().slice("(when=".length, this.toString().indexOf(")=>"))
+    let cleanString = withoutWhitespaces(this.toString())
+    return this.pattern = cleanString.slice("(when=".length, cleanString.indexOf(")=>"));
   }
 
   getResultFunction(){
-    return eval(this.toString().replace("=" + this.getPattern(), ""))
+    return eval(`()=>${this.toString().substring(this.toString().indexOf("=>")+2)}`)
   }
 
   matches(value){
@@ -39,8 +36,8 @@ class Case {
   }
 
   getType(){
-    if(Value.applysFor(this.getPattern())){
-      return Value;
+    if(PrimitiveValue.applysFor(this.getPattern())){
+      return PrimitiveValue;
     } else if(Annonymous.applysFor(this.getPattern())){
       return Annonymous;
     }
@@ -48,18 +45,18 @@ class Case {
 
 }
 
-class Value {
+class PrimitiveValue {
 
   static matches(value, pattern){
-    return eval(pattern) === value;
+    return Object.is(eval(pattern), value);
   }
 
   static applysFor(pattern){
     if(isUndeclared(pattern)) return false;
     let value = eval(pattern);
     return(
-      typeof value == "number" || typeof value == "string" || typeof value == "symbol" ||
-      typeof value == "boolean" || typeof value == "null" || typeof value == "undefined" || typeof value == "object"
+      typeof value == "number" || typeof value == "string" || typeof value == "object" ||
+      typeof value == "boolean" || typeof value == "null" || typeof value == "undefined"
     );
   }
 
