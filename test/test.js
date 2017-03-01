@@ -8,7 +8,7 @@ describe('Match', function() {
     let obj = {key:"value"};
 
     const getValueName = (value) =>  match (value) (
-      (when= 1) => "one",
+      (when) => "one",
       (when= 2) => "two",
       (when= 2) => "another two",
       (when= "three") => "3",

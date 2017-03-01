@@ -16,6 +16,8 @@ class Case {
 
   constructor(functionCase){
     this.toString = () => functionCase.toString();
+    if(!this.isSintacticallyValid())
+      throw new ParseError("All patterns should be in the form: (when= {pattern}) => {result}")
   }
 
   isSintacticallyValid(){
@@ -74,14 +76,8 @@ class Annonymous {
 
 }
 
-const validateCasesSintax = (cases) =>{
-  if(!cases.every( aCase => aCase.isSintacticallyValid() ))
-    throw new ParseError("All patterns should be in the form: (when= {pattern}) => {result}")
-}
-
 const match = (value) => (...functionCases) => {
   let cases = functionCases.map( aCase => new Case(aCase) )
-  validateCasesSintax(cases);
 
   let matchingCase = cases.find( aCase => aCase.matches(value) )
   if(!matchingCase)
