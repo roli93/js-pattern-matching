@@ -21,7 +21,7 @@ class Case {
   }
 
   isSintacticallyValid(){
-    return /\(when=.*\)\s*=>.*/.test(this.toString())
+    return /\(when=.*\S+.*\)\s*=>.*/.test(this.toString())
   }
 
   getPattern(){
