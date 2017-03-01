@@ -5,8 +5,6 @@ var { MatchError } = require('../match/errors.js');
 describe('Match', function() {
   context('Value matching', () => {
 
-    let obj = {key:"value"};
-
     const getValueName = (value) =>  match (value) (
       (when= 1) => "one",
       (when= 2) => "two",
@@ -77,7 +75,9 @@ describe('Match', function() {
     const getValueName = (value) =>  match (value) (
       (when= 1) => "one",
       (when= EvalError) => "EvalError",
-      (when= {message} < ReferenceError) => message,
+      (when= e < ReferenceError) => e.message,
+      (when= [x,...xs] < Array) => x,
+      (when= { message } < SyntaxError) => message+"!",
       (when= Error) => "Other Error"
     )
 
@@ -91,6 +91,14 @@ describe('Match', function() {
 
     it('should allow for the matching value to be used in the closure', () => {
       expect(getValueName(new ReferenceError("Undeclared varable") )).to.equal("Undeclared varable");
+    });
+
+    it('should allow for the matching value to be deconstructed as object and used in the closure', () => {
+      expect(getValueName(new SyntaxError("Bleh"))).to.equal("Bleh!");
+    });
+
+    it('should allow for the matching value to be deconstructed as array and used in the closure', () => {
+      expect(getValueName([1,2,3])).to.equal(1);
     });
 
 

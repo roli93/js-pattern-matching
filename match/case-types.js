@@ -5,7 +5,7 @@ const isUndeclared = (pattern) => {
   try {
     eval(pattern);
   } catch(e) {
-    if(e instanceof ReferenceError) result = true;
+    if(e instanceof ReferenceError || e instanceof SyntaxError) result = true;
   }
   return result
 }
