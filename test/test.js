@@ -77,7 +77,7 @@ describe('Match', function() {
     const getValueName = (value) =>  match (value) (
       (when= 1) => "one",
       (when= EvalError) => "EvalError",
-      (when= e < ReferenceError) => e.message,
+      (when= {message} < ReferenceError) => message,
       (when= Error) => "Other Error"
     )
 
