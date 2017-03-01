@@ -14,6 +14,10 @@ const withoutWhitespaces = (string) => string.replace(/\s/g, '');
 
 class Case {
 
+  static types(){
+    return [ PrimitiveValue, Annonymous ];
+  }
+
   constructor(functionCase){
     this.toString = () => functionCase.toString();
     if(!this.isSintacticallyValid())
@@ -38,11 +42,7 @@ class Case {
   }
 
   getType(){
-    if(PrimitiveValue.applysFor(this.getPattern())){
-      return PrimitiveValue;
-    } else if(Annonymous.applysFor(this.getPattern())){
-      return Annonymous;
-    }
+    return Case.types().find( type => type.applysFor(this.getPattern()) )
   }
 
 }
