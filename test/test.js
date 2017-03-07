@@ -6,14 +6,14 @@ describe('Match', function() {
   context('Value matching', () => {
 
     const getValueName = (value) =>  match (value) (
-      (when= 1) => "one",
-      (when= 2) => "two",
-      (when= 2) => "another two",
-      (when= "three") => "3",
-      (when= undefined) => "undefined",
-      (when= null) => "null",
-      (when= true) => "true",
-      (when= NaN) => "Not a number"
+      (v= 1) => "one",
+      (v= 2) => "two",
+      (v= 2) => "another two",
+      (v= "three") => "3",
+      (v= undefined) => "undefined",
+      (v= null) => "null",
+      (v= true) => "true",
+      (v= NaN) => "Not a number"
     )
 
     it('should match a literal number value', () => {
@@ -50,13 +50,17 @@ describe('Match', function() {
 
   });
 
-  context('Annonymous variable', () => {
+  context('Variables', () => {
 
     const getValueName = (number) =>  match (number) (
-      (when= 1) => "one",
-      (when= 2) => "two",
-      (when= _) => "other",
-      (when= 100) => "a hundred"
+      (v= 1) => "one",
+      (v= 2) => "two",
+      (_) => "other",
+      (v= 100) => "a hundred"
+    )
+
+    const getVar = (variable) =>  match (variable) (
+      (whatever) => "Whatever was " + whatever
     )
 
     it('should always match an annonymous variable if no previous value matches', () => {
@@ -67,18 +71,35 @@ describe('Match', function() {
       expect(getValueName(100)).to.equal("other");
     });
 
+    it('should always match and bind a variable', () => {
+      expect(getVar("Blah")).to.equal("Whatever was Blah");
+    });
+
+  });
+
+  context('Context wrapping', () => {
+
+    const bang = "!"
+
+    const getValueName = (number) =>  match (number) (
+      (v= 1) => "one"+bang,
+      (v= 2) => "two"
+    )
+
+    it('should wrap external scope variables', () => {
+      expect(getValueName(1)).to.equal("one!");
+    });
 
   });
 
   context('Class matching', () => {
 
     const getValueName = (value) =>  match (value) (
-      (when= 1) => "one",
-      (when= EvalError) => "EvalError",
-      (when= e < ReferenceError) => e.message,
-      (when= [x,...xs] < Array) => x,
-      (when= { message } < SyntaxError) => message+"!",
-      (when= Error) => "Other Error"
+      (v= 1) => "one",
+      (EvalError) => "EvalError",
+      (e = ReferenceError) => e.message,
+      ({ message } = SyntaxError) => message+"!",
+      (Error) => "Other Error"
     )
 
     it('should match a value belonging to a class', () => {
@@ -86,22 +107,38 @@ describe('Match', function() {
     });
 
     it('should match a value belonging to a subclass', () => {
-      expect(getValueName(new RangeError() )).to.equal("Other Error");
+      expect(getValueName(new RangeError())).to.equal("Other Error");
     });
 
     it('should allow for the matching value to be used in the closure', () => {
-      expect(getValueName(new ReferenceError("Undeclared varable") )).to.equal("Undeclared varable");
+      expect(getValueName(new ReferenceError("Undeclared variable") )).to.equal("Undeclared variable");
     });
 
     it('should allow for the matching value to be deconstructed as object and used in the closure', () => {
       expect(getValueName(new SyntaxError("Bleh"))).to.equal("Bleh!");
     });
 
-    it('should allow for the matching value to be deconstructed as array and used in the closure', () => {
-      expect(getValueName([1,2,3])).to.equal(1);
+  });
+
+  context('Array matching', () => {
+
+    const sum = (array) =>  match (array) (
+      ([x,...xs]) => x + sum(xs),
+      ([]) => 0
+    )
+
+    const empty = (array) =>  match (array) (
+      ([]) => true,
+      (_) => false
+    )
+
+    it('should match an empty array', () => {
+      expect(empty([])).to.equal(true);
     });
 
-
+    it('should match a nonempty array', () => {
+      expect(sum([1,2,3])).to.equal(6);
+    });
   });
 
 });

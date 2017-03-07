@@ -8,30 +8,26 @@ class Case {
   }
 
   constructor(functionCase){
+    this.resultFunction = functionCase;
     this.toString = () => functionCase.toString();
-    if(!this.isSintacticallyValid())
-      throw new ParseError("All patterns should be in the form: (when= {pattern}) => {result}")
-  }
-
-  isSintacticallyValid(){
-    return /\(when=.*\S+.*\)\s*=>.*/.test(this.toString())
   }
 
   getPattern(){
     let cleanString = withoutWhitespaces(this.toString())
-    return this.pattern = cleanString.slice("(when=".length, cleanString.indexOf(")=>"));
+    let parameters = cleanString.slice(cleanString.indexOf("(") + 1, cleanString.indexOf(")=>"));
+    return this.isValuePattern(parameters) ? substringFrom(parameters, "=") : parameters;
+}
+
+  isValuePattern(parameters){
+    return parameters.includes("=")
   }
 
   getResultFunction(){
-    return eval(`(${this.getMatchingValue()?this.getMatchingValue():''})=>${substringFrom(this.toString(),"=>")}`);
+    return this.resultFunction
   }
 
   matches(value){
     return this.getType().matches(value, this.getPattern());
-  }
-
-  getMatchingValue(){
-    return this.getType().extractedValue(this.getPattern());
   }
 
   getType(){
