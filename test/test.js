@@ -1,6 +1,6 @@
 var expect = require('expect.js');
-var match = require('../match/match.js');
-var { MatchError } = require('../match/errors.js');
+var match = require('../src/match/match.js');
+var { MatchError } = require('../src/match/errors.js');
 
 describe('Match', function() {
   context('Value matching', () => {
