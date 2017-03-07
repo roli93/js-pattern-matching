@@ -1,4 +1,4 @@
-import { substringFrom, substringTo } from '../util/string-util.js';
+import { substringFrom, substringTo, head, last } from '../util/string-util.js';
 
 const isUndeclared = (pattern) => {
   let result = false;
@@ -10,8 +10,25 @@ const isUndeclared = (pattern) => {
   return result
 }
 
+const isA = (value,type) => (type === "null" && value === null) || typeof value == type
 
-class PrimitiveValue {
+class Binding {
+
+  static binds(){
+    return true;
+  }
+
+}
+
+class NonBinding {
+
+  static binds(){
+    return false;
+  }
+
+}
+
+class PrimitiveValue extends NonBinding{
 
   static matches(value, pattern){
     return Object.is(eval(pattern), value);
@@ -21,14 +38,13 @@ class PrimitiveValue {
     if(isUndeclared(pattern)) return false;
     let value = eval(pattern);
     return (
-      typeof value == "number" || typeof value == "string" || typeof value == "object" && !(value instanceof Array) ||
-      typeof value == "boolean" || typeof value == "null" || typeof value == "undefined"
+      isA(value, "number") || isA(value, "string") || isA(value, "boolean") || isA(value, "null") || isA(value, "undefined")
     );
   }
 
 }
 
-class Variable {
+class Variable extends Binding {
 
   static matches(value, pattern){
     return true;
@@ -38,13 +54,26 @@ class Variable {
     return (
       /^([a-z]|[A-Z]|_)(\w)*/.test(pattern) &&
       !PrimitiveValue.applysFor(pattern) &&
-      !Class.applysFor(pattern)
+      !Class.applysFor(pattern) &&
+      !AnnonymousVariable.applysFor(pattern)
     )
   }
 
 }
 
-class Class {
+class AnnonymousVariable extends NonBinding {
+
+  static matches(value, pattern){
+    return true;
+  }
+
+  static applysFor(pattern){
+    return pattern === "_"
+  }
+
+}
+
+class Class extends Binding {
 
   static matches(value, pattern){
     return value instanceof eval(pattern)
@@ -52,11 +81,11 @@ class Class {
 
   static applysFor(pattern){
     if(isUndeclared(pattern)) return false;
-    return typeof eval(pattern) === 'function'
+    return isA(eval(pattern), 'function')
   }
 }
 
-class GenericArray {
+class GenericArray extends Binding {
 
   static matches(value, pattern){
     return value instanceof Array && this.emptinessHolds(value)
@@ -79,7 +108,7 @@ class EmptyArray extends GenericArray {
 class NonemptyArray extends GenericArray {
 
   static applysFor(pattern){
-    return pattern[0] === "[" && pattern[pattern.length-1] == "]" && pattern !== "[]"
+    return pattern !== "[]" && head(pattern) === "[" && last(pattern) == "]"
   }
 
   static emptinessHolds(value){
@@ -92,5 +121,6 @@ export default [
   Variable,
   Class,
   EmptyArray,
-  NonemptyArray
+  NonemptyArray,
+  AnnonymousVariable
 ];

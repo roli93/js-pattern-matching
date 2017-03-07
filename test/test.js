@@ -63,6 +63,10 @@ describe('Match', function() {
       (whatever) => "Whatever was " + whatever
     )
 
+    const getAnon = (variable) =>  match (variable) (
+      (_) => _
+    )
+
     it('should always match an annonymous variable if no previous value matches', () => {
       expect(getValueName(5)).to.equal("other");
     });
@@ -73,6 +77,10 @@ describe('Match', function() {
 
     it('should always match and bind a variable', () => {
       expect(getVar("Blah")).to.equal("Whatever was Blah");
+    });
+
+    it('should never bind an annonymous variable', () => {
+      expect(getAnon("Blah")).to.equal(undefined);
     });
 
   });

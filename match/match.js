@@ -8,7 +8,7 @@ const match = (value) => (...functionCases) => {
   if(!matchingCase)
     throw new MatchError()
 
-  return matchingCase.getResultFunction()(value)
+  return matchingCase.getResultFunction()(matchingCase.binds()? value : undefined)
 }
 
 module.exports = match
