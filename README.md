@@ -6,7 +6,7 @@ JS-Pattern-Matching
 ====================
 A small library intended to provide simple Pattern Matching capabilities for JavaScript.
 
-```javascript 
+```javascript
 var match = require('js-pattern-matching');
 
 const sum = (list) =>  match (list) (
@@ -18,7 +18,7 @@ console.log(sum([]));
 // prints 0
 console.log(sum([1,2,3]));
 // prints 6
-``` 
+```
 
 Installation
 ====================
@@ -35,18 +35,18 @@ Currently Babel is not supported by JS-Pattern-Matching. We are working hard to 
 
 If you still want to use JS-Pattern-Matching, you can use it inside a separate file and later tell Babel to ignore that file by adding the following entry to you `.babelrc` file:
 
-```javascript 
+```javascript
 {
   "ignore": ["file-using-js-pattern-matching.js"]
 }
-``` 
+```
 Using JS-Pattern-Matching
 ====================
 We import the powerful `match` function by doing
 
-```javascript 
+```javascript
 var match = require('js-pattern-matching');
-``` 
+```
 ### General Syntax
 
 The syntax is always of the form:
@@ -121,11 +121,11 @@ length("Hello!") //returns 6
 
 ```javascript
 const isVowel = (letter) =>  match (letter) (
-  ('A') => true,
-  ('E') => true,
-  ('I') => true,
-  ('O') => true,
-  ('U') => true,
+  (v= 'A') => true,
+  (v= 'E') => true,
+  (v= 'I') => true,
+  (v= 'O') => true,
+  (v= 'U') => true,
    (_) => false
 )
 
