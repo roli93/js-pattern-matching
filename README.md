@@ -49,14 +49,14 @@ var match = require('js-pattern-matching');
 ``` 
 ### General Syntax
 
-The syntax always is of the form:
+The syntax is always of the form:
 ```
 match (valueToMatch)(
- listOfCommaSeparatedClosures
+ listOfCommaSeparatedCaseClosures
 )
 ```
 
-Each closure has to be a valid ES2015 closure and is itself of the form `(pattern) => closureBody`
+Each case-closure has to be a valid ES2015 closure and is itself of the form `(pattern) => closureBody`
 
 We explore different patterns in the following section
 
@@ -91,6 +91,46 @@ const getNumberName = (value) =>  match (value) (
 
 getNumberName(1) //returns "one"
 getNumberName(5) //throws MatchError
+```
+
+* If more than one case-closures match, the first takes precedence:
+```javascript
+const getNumberName = (value) =>  match (value) (
+  (v= 1) => "the first one",
+  (v= 1) => "another one"
+)
+
+getNumberName(1) //returns "the first one"
+```
+
+### Matching and binding variables
+
+The pattern for a variable is simply `(variableName)`
+
+* A variable pattern always matches anything and binds the variable to the matching value
+```javascript
+const length = (array) =>  match (array) (
+  (array) => array.length
+)
+
+length([1,2,3]) //returns 3
+length("Hello!") //returns 6
+```
+
+* An annonymous variable (_) pattern always matches anything but doesn't bind the variable. It is usually used as a fallback case-closure
+
+```javascript
+const isVowel = (letter) =>  match (letter) (
+  ('A') => true,
+  ('E') => true,
+  ('I') => true,
+  ('O') => true,
+  ('U') => true,
+   (_) => false
+)
+
+isVowel('I') //returns true
+isVowel('R') //returns false
 ```
 
 
