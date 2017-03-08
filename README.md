@@ -47,12 +47,26 @@ We import the powerful `match` function by doing
 ```javascript 
 var match = require('js-pattern-matching');
 ``` 
+### General Syntax
+
+The syntax always is of the form:
+```
+match (valueToMatch)(
+ listOfCommaSeparatedClosures
+)
+```
+
+Each closure has to be a valid ES2015 closure and is itself of the form `(pattern) => closureBody`
+
+We explore different patterns in the following section
 
 ### Matching literal values
 
+The pattern for literal values is always `(someVariable= matchingValue)`. By convention, we use the variable `v` which simply stands for "value", but any other valid JS identifier will do
+
 * We can match literal values of primitive types: `number`, `string`, `boolean`, `null`, `undefined`:
 ```javascript
-const getValueName = (value) =>  match (value) (
+const getValue = (value) =>  match (value) (
   (v= 1) => "The number one",
   (v= "hello") => "A greeting",
   (v= undefined) => "An undefined value",
@@ -66,6 +80,17 @@ getValue("hello") //returns "A greeting"
 getValue(parseInt("lala")) //returns "Not a number"
 getValue(2 == 2)//returns "The true boolean"
 ...  
+```
+
+* If no value matches, `MatchError` is thrown:
+```javascript
+const getNumberName = (value) =>  match (value) (
+  (v= 1) => "one",
+  (v= 2) => "two"
+)
+
+getNumberName(1) //returns "one"
+getNumberName(5) //throws MatchError
 ```
 
 
