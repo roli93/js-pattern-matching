@@ -132,18 +132,70 @@ const isVowel = (letter) =>  match (letter) (
 isVowel('I') //returns true
 isVowel('R') //returns false
 ```
+### Matching and Binding Class instances
 
+The pattern for Classes is simply `(ClassName)` or `( variable = ClassName)` to bind the class instance
 
+* We can match values according to their class:
 
+```javascript
+const hasPermission = (user) =>  match (user) (
+  (Admin) => true,
+  (FreeUser) => false,
+  (PremiumUser) => false
+)
 
+hasPermission(new FreeUser()) //returns false
+```
+* We can match values according to their superclass:
 
+```javascript
+const readError = (user) =>  match (user) (
+  (ReferenceError) => "Something was undeclared!",
+  (Error) => "Other Error"
+)
 
+readError(new ReferenceError()) //returns "Something was undeclared!"
+readError(new SyntaxError()) //returns "Other Error"
+```
+* We can bind to variables values that match to a class o superclass:
 
+```javascript
+try {
+  x + 1
+} catch(error){
+  match (error) (
+  (e = ReferenceError) => "Reference error:" + e.message,
+  (Error) => "Other Error"
+)
 
+//As x hasn´t been declared, it returns "Reference Error: x is not defined"
+```
+* We can even bing to variables by ES2015 destructuring:
 
+```javascript
+try {
+  x + 1
+} catch(error){
+  match (error) (
+  ({ message } = ReferenceError) => "Reference error:" + message,
+  (Error) => "Other Error"
+)
 
+//As x hasn´t been declared, it returns "Reference Error: x is not defined"
+```
 
+### Matching and Binding Array instances:
 
+To simplify array handling, we provide specific Array matchers, based on ES2015 Array destructuring:
 
+* We can match an empty or nonempty array:
 
+```javascript
+const sum = (array) =>  match (array) (
+  ([x,...xs]) => x + sum(xs),
+  ([]) => 0
+)
 
+sum([1,2,3]) // returns 6
+```
