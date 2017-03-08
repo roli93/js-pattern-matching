@@ -2,7 +2,20 @@
 [![Dependency Status](https://david-dm.org/roli93/js-pattern-matching.svg)](https://david-dm.org/roli93/js-pattern-matching)
 [![devDependencies Status](https://david-dm.org/roli93/js-pattern-matching/dev-status.svg)](https://david-dm.org/roli93/js-pattern-matching?type=dev)
 
-# js-pattern-matching
+JS Pattern Matching
+====================
 A small library intended to provide simple Pattern Matching capabilities for JavaScript.
 
-Documentation under construction...
+```javascript 
+const sum = (list) =>  match (list) (
+  ([x,...xs]) => x + sum(xs),
+  ([]) => 0
+)
+
+console.log(sum([]));
+// prints 0
+console.log(sum([1,2,3]));
+// prints 6
+``` 
+
+
