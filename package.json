@@ -1,6 +1,6 @@
 {
   "name": "js-pattern-matching",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A small library intended to provide simple Pattern Matching for JavaScript",
   "main": "./dist/match/match.js",
   "scripts": {
