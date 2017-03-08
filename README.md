@@ -7,6 +7,8 @@ JS-Pattern-Matching
 A small library intended to provide simple Pattern Matching capabilities for JavaScript.
 
 ```javascript 
+var match = require('js-pattern-matching');
+
 const sum = (list) =>  match (list) (
   ([x,...xs]) => x + sum(xs),
   ([]) => 0
@@ -31,10 +33,52 @@ JS-Pattern-Matching leverages ES2015 syntax to make more readable and easy-to-us
 
 Currently Babel is not supported by JS-Pattern-Matching. We are working hard to bring support for it as soon as possible.
 
-If you still want to use JS-Pattern-Matching, you can use it inside a file and later tell Babel to ignore that file by adding the following entry to you `.babelrc` file:
+If you still want to use JS-Pattern-Matching, you can use it inside a separate file and later tell Babel to ignore that file by adding the following entry to you `.babelrc` file:
 
 ```javascript 
 {
   "ignore": ["file-using-js-pattern-matching.js"]
 }
 ``` 
+Using JS-Pattern-Matching
+====================
+We import the powerful `match` function by doing
+
+```javascript 
+var match = require('js-pattern-matching');
+``` 
+
+### Matching literal values
+
+* We can match literal values of primitive types: `number`, `string`, `boolean`, `null`, `undefined`:
+```javascript
+const getValueName = (value) =>  match (value) (
+  (v= 1) => "The number one",
+  (v= "hello") => "A greeting",
+  (v= undefined) => "An undefined value",
+  (v= null) => "A null value",
+  (v= true) => "The true boolean",
+  (v= NaN) => "Not a number"
+)
+
+getValue(1) //returns "The number one"
+getValue("hello") //returns "A greeting"
+getValue(parseInt("lala")) //returns "Not a number"
+getValue(2 == 2)//returns "The true boolean"
+...  
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
