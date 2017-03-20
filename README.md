@@ -29,8 +29,8 @@ npm install --save js-pattern-matching
 
 JS-Pattern-Matching leverages ES2015 syntax to make more readable and easy-to-use code. Therefore, it can only be run in ES2015-supporting environments (Node 4 or above)
 
-##Babel
-
+Babel
+------
 Currently Babel is not supported by JS-Pattern-Matching. We are working hard to bring support for it as soon as possible.
 
 If you still want to use JS-Pattern-Matching, you can use it inside a separate file and later tell Babel to ignore that file by adding the following entry to you `.babelrc` file:
