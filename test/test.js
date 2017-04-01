@@ -1,5 +1,5 @@
-var babelTests = require('./babel-test.js').default;
-var nonBabelTests = require('./non-babel-test.js');
+import babelTests from './babel-test.js';
+import nonBabelTests from './non-babel-test.js';
 
 describe('Basic Match', nonBabelTests);
 

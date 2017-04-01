@@ -3,9 +3,9 @@
     "es2015",
     "stage-2"
   ],
-  "ignore": ["test/test.js"],
+  "ignore": ["test/non-babel-test.js"],
   "plugins": [
-    "/Users/rcaputo/WhitePrompt/babel-plugin-js-pattern-matching/src",
+      "/Users/rcaputo/WhitePrompt/babel-plugin-js-pattern-matching/src",
       ["babel-plugin-transform-builtin-extend", {
           "globals": ["Error"]
       }]
