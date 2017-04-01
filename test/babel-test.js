@@ -100,5 +100,32 @@ export default () => {
 
   });
 
-  
+  context('Class matching', () => {
+
+    const getValueName = (value) =>  match (value) (
+      (v= 1) => "one",
+      (EvalError) => "EvalError",
+      (e = ReferenceError) => e.message,
+      ({ message } = SyntaxError) => message+"!",
+      (Error) => "Other Error"
+    )
+
+    it('should match a value belonging to a class', () => {
+      expect(getValueName(new EvalError())).to.equal("EvalError");
+    });
+
+    it('should match a value belonging to a subclass', () => {
+      expect(getValueName(new RangeError())).to.equal("Other Error");
+    });
+
+    it('should allow for the matching value to be used in the closure', () => {
+      expect(getValueName(new ReferenceError("Undeclared variable") )).to.equal("Undeclared variable");
+    });
+
+    it('should allow for the matching value to be deconstructed as object and used in the closure', () => {
+      expect(getValueName(new SyntaxError("Bleh"))).to.equal("Bleh!");
+    });
+
+  });
+
 }
