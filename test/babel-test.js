@@ -128,4 +128,25 @@ export default () => {
 
   });
 
+  context('Array matching', () => {
+
+    const sum = (array) =>  match (array) (
+      ([x,...xs]) => x + sum(xs),
+      ([]) => 0
+    )
+
+    const empty = (array) =>  match (array) (
+      ([]) => true,
+      (_) => false
+    )
+
+    it('should match an empty array', () => {
+      expect(empty([])).to.equal(true);
+    });
+
+    it('should match a nonempty array', () => {
+      expect(sum([1,2,3])).to.equal(6);
+    });
+  });
+
 }
