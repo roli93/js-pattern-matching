@@ -5,6 +5,7 @@
   ],
   "ignore": ["test/test.js"],
   "plugins": [
+    "/Users/rcaputo/WhitePrompt/babel-plugin-js-pattern-matching/src",
       ["babel-plugin-transform-builtin-extend", {
           "globals": ["Error"]
       }]

@@ -3,28 +3,14 @@ import { withoutWhitespaces, substringFrom } from '../util/string-util.js';
 
 class Case {
 
-  static types(){
-    return caseTypes;
-  }
-
-  constructor(functionCase){
-    this.resultFunction = functionCase;
-    this.toString = () => functionCase.toString();
-    this.configure();
-  }
-
-  configure(){
-    this.type = Case.types().find( type => type.applysFor(this.getPattern()) )
+  constructor(func, pattern, type){
+    this.resultFunction = func;
+    this.pattern = pattern;
+    this.type = type;
   }
 
   getPattern(){
-    let cleanString = withoutWhitespaces(this.toString())
-    let parameters = cleanString.slice(cleanString.indexOf("(") + 1, cleanString.indexOf(")=>"));
-    return this.isValuePattern(parameters) ? substringFrom(parameters, "=") : parameters;
-  }
-
-  isValuePattern(parameters){
-    return parameters.includes("=")
+    return this.pattern;
   }
 
   getResultFunction(){
@@ -41,4 +27,47 @@ class Case {
 
 }
 
-export default Case;
+class CaseBuilder {
+
+  static types(){
+    return caseTypes;
+  }
+
+  static build(caseDefinition){
+    return new Case(
+      this.getCaseFunction(caseDefinition),
+      this.getCasePattern(caseDefinition),
+      this.getCaseType(caseDefinition)
+    );
+  }
+
+  static isBabelized(caseDefinition){
+    let r = Boolean(caseDefinition.pattern) && Boolean(caseDefinition.function);
+    return r
+  }
+
+  static getCaseFunction(caseDefinition){
+    return this.isBabelized(caseDefinition)? caseDefinition.function : caseDefinition
+  }
+
+  static getCasePattern(caseDefinition){
+    return this.isBabelized(caseDefinition)? caseDefinition.pattern : this.buildPattern(caseDefinition)
+  }
+
+  static getCaseType(caseDefinition){
+    return CaseBuilder.types().find( type => type.applysFor(this.getCasePattern(caseDefinition)) )
+  }
+
+  static isValuePattern(parameters){
+    return parameters.includes("=")
+  }
+
+  static buildPattern(caseDefinition){
+    let cleanString = withoutWhitespaces(caseDefinition.toString())
+    let parameters = cleanString.slice(cleanString.indexOf("(") + 1, cleanString.indexOf(")=>"));
+    return this.isValuePattern(parameters) ? substringFrom(parameters, "=") : parameters;
+  }
+
+}
+
+export default CaseBuilder;
