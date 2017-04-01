@@ -85,5 +85,20 @@ export default () => {
 
   });
 
+  context('Context wrapping', () => {
+
+    const bang = "!"
+
+    const getValueName = (number) =>  match (number) (
+      (v= 1) => "one"+bang,
+      (v= 2) => "two"
+    )
+
+    it('should wrap external scope variables', () => {
+      expect(getValueName(1)).to.equal("one!");
+    });
+
+  });
+
   
 }
