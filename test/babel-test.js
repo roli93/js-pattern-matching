@@ -49,4 +49,41 @@ export default () => {
     });
 
   });
+
+  context('Variables', () => {
+
+    const getValueName = (number) =>  match (number) (
+      (v= 1) => "one",
+      (v= 2) => "two",
+      (_) => "other",
+      (v= 100) => "a hundred"
+    )
+
+    const getVar = (variable) =>  match (variable) (
+      (whatever) => "Whatever was " + whatever
+    )
+
+    const getAnon = (variable) =>  match (variable) (
+      (_) => _
+    )
+
+    it('should always match an annonymous variable if no previous value matches', () => {
+      expect(getValueName(5)).to.equal("other");
+    });
+
+    it('should absorb further cases with an annonymous variable', () => {
+      expect(getValueName(100)).to.equal("other");
+    });
+
+    it('should always match and bind a variable', () => {
+      expect(getVar("Blah")).to.equal("Whatever was Blah");
+    });
+
+    it('should never bind an annonymous variable', () => {
+      expect(getAnon("Blah")).to.equal(undefined);
+    });
+
+  });
+
+  
 }
