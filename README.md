@@ -175,11 +175,13 @@ readError(new SyntaxError()) //returns "Other Error"
 ```javascript
 try {
   x + 1
-} catch(error){
+} 
+catch(error) {
   match (error) (
-  (e = ReferenceError) => "Reference error:" + e.message,
-  (Error) => "Other Error"
-)
+    (e = ReferenceError) => "Reference error:" + e.message,
+    (Error) => "Other Error"
+  )
+}
 
 //As x hasn´t been declared, it returns "Reference Error: x is not defined"
 ```
