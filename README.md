@@ -190,11 +190,13 @@ catch(error) {
 ```javascript
 try {
   x + 1
-} catch(error){
+}
+catch(error) {
   match (error) (
-  ({ message } = ReferenceError) => "Reference error:" + message,
-  (Error) => "Other Error"
-)
+    ({ message } = ReferenceError) => "Reference error:" + message,
+    (Error) => "Other Error"
+  )
+}
 
 //As x hasn´t been declared, it returns "Reference Error: x is not defined"
 ```
